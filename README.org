@@ -1,0 +1,31 @@
+* Ring Attention
+#+begin_export bqn
+e ← 4
+t ← 8
+n ← 8
+b ← t ÷ n
+sh ← t‿e
+blk_sh ← n‿b‿e
+MakeMat ← (↕×´)⊸(⥊˜)
+MatMul ← +˝∘×⎉1‿∞
+q ← MakeMat sh
+k ← MakeMat sh
+v ← MakeMat sh
+a ← q MatMul (⍉k)
+out ← a MatMul v
+qn‿kn‿vn ← blk_sh⊸⥊¨ q‿k‿v
+
+Step ← {𝕊h‿o:
+qd ← h⊏qn
+kd ← o⊏kn
+vd ← o⊏vn
+ad ← qd MatMul (⍉kd)
+ad Matmul vd
+}
+
+order ← (↕n) ⌽˘ (⍉((↕n)⋈⌜(↕n)))
+res ← Step¨ (⥊order)
+#•Show (¯1×↕n) ⌽˘ (⍉order)
+ores ← (¯1×↕n) ⌽˘ (⍉(≢order)⥊res)
+out ≡ t‿e⥊>+˝ores
+#+end_export
